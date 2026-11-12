@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8"><title>PixelScope Test Shop</title>
+<style>body{font-family:system-ui,sans-serif;max-width:640px;margin:40px auto;padding:0 20px}button{padding:10px 14px;margin:6px 6px 6px 0;font-size:15px;cursor:pointer}.good{color:#16a34a}.bad{color:#dc2626}</style>
+<script>
+// Mock fbq — stands in for the real Meta Pixel so you can test PixelScope
+// without a real shop. It behaves like fbq: queue + version, no network.
+window.fbq = function(){ (window.fbq.queue = window.fbq.queue || []).push(arguments); console.log('[fbq]', ...arguments); };
+window.fbq.version = '2.0';
+window.fbq.queue = [];
+// NOTE: this line is in the page HTML so PixelScope's code scanner finds it:
+fbq('init', '111111111111111');
+fbq('init', '222222222222222'); // second pixel — deliberate mistake
+fbq('track', 'PageView');
+</script></head>
+<body>
+<h1>PixelScope Test Shop 🛒</h1>
+<p>Open <b>PixelScope</b> in the toolbar, then click the buttons below. It should find <b>2 Pixels</b>, score this page low, and list each broken thing separately.</p>
+<p class="good">✓ Good: PageView + ViewContent (with value, currency, content_ids)</p>
+<p class="bad">✗ Broken on purpose: duplicate AddToCart, Purchase with no value/currency, Purchase with eventID in the wrong place, and a 2nd Pixel ID.</p>
+<button onclick="fbq('track','ViewContent',{content_ids:['SKU-123'],content_type:'product',value:49.99,currency:'USD'})">View product</button>
+<button onclick="fbq('track','AddToCart',{value:49.99,currency:'USD',content_ids:['SKU-123']});fbq('track','AddToCart',{value:49.99,currency:'USD',content_ids:['SKU-123']})">Add to cart (fires TWICE)</button>
+<button onclick="fbq('track','InitiateCheckout',{value:49.99,currency:'USD'})">Start checkout</button>
+<button onclick="fbq('track','Purchase',{eventID:'order-123'})">Buy — no value, eventID in wrong place</button>
+<button onclick="fbq('track','Purchase',{value:49.99,currency:'USD',content_ids:['SKU-123']},{eventID:'order-124'})">Buy — correct (eventID as 4th argument)</button>
+<button onclick="fbq('track','Purchase',{value:'$49.99',currency:'USD'})">Buy — value as "$49.99" (wrong format)</button>
+<button onclick="fbq('track','Lead',{email:'test@example.com',value:0,currency:'USD'})">Lead — raw email in params (PII)</button>
+<button onclick="fbq('track','purchase',{value:10,currency:'USD'})">Buy — lowercase "purchase" (case matters)</button>
+<button onclick="console.warn('[Meta Pixel] - Required parameter \'value\' is missing for event \'Purchase\'.')">Print a [Meta Pixel] console warning</button>
+<hr><p><small>This is a local test file only. No data is sent anywhere. The real Meta Pixel is not loaded here.</small></p>
+</body></html>

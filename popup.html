@@ -1,0 +1,50 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="popup.css"></head>
+<body>
+<header>
+  <div class="logo">◉ PixelScope <span>Pro</span></div>
+  <div class="hdr-btns"><button id="pauseBtn" title="Pause / resume live capture">⏸ Pause</button><button id="clearBtn" title="Clear events on this page">Clear</button></div>
+</header>
+<div id="scoreBar"><div id="scoreNum">–</div><div><div id="scoreLabel">Checking this page…</div><div id="scoreWhy" class="muted"></div></div><button id="exportBtn" title="Download a full audit report">⇩ Report</button></div>
+<nav id="tabs">
+  <button data-tab="events" class="active">Events</button>
+  <button data-tab="issues">Issues <span id="issueCount"></span></button>
+  <button data-tab="funnel">Funnel</button>
+  <button data-tab="capi">CAPI</button>
+  <button data-tab="code">Code</button>
+  <button data-tab="history">History</button>
+</nav>
+<main>
+  <section id="tab-events" class="tab active">
+    <div id="pixelLine" class="muted"></div>
+    <div id="platformLine" class="chips"></div>
+    <div id="otherLine" class="chips"></div>
+    <input id="filter" placeholder="Filter events…  e.g. Purchase">
+    <div id="eventList"></div>
+    <div class="testrow"><span>Test-fire:</span>
+      <button data-fire="PageView">PageView</button><button data-fire="ViewContent">ViewContent</button><button data-fire="AddToCart">AddToCart</button><button data-fire="Purchase">Purchase</button>
+      <span class="muted">fires a real fbq event on this page</span></div>
+  </section>
+  <section id="tab-issues" class="tab"><div id="issueList"></div></section>
+  <section id="tab-funnel" class="tab"><div id="funnelList"></div><p class="muted">Funnel is for this page visit only. Walk the shop yourself — View a product, add to cart, start checkout, buy (test order) — and watch each step light up.</p></section>
+  <section id="tab-capi" class="tab">
+    <h3>Conversions API — what the browser <i>cannot</i> see</h3>
+    <p class="muted">This panel cannot see server events. That is honest, not a bug — the original pretends otherwise. Use it to check deduplication:</p>
+    <div id="capiList"></div>
+    <label>Order / event ID to test <input id="capiId" value="order-12345"></label>
+    <button id="copyCapi">Copy CAPI payload preview</button>
+    <p class="muted">Then open <b>Events Manager → Test Events</b> and send the same event_id from your server. If both arrive with the same event_id within 48h, Meta keeps one. If the IDs differ, it counts twice.</p>
+  </section>
+  <section id="tab-code" class="tab">
+    <h3>Install code — one place only</h3>
+    <p class="muted">Pick a Pixel ID, copy, paste in <b>&lt;head&gt;</b> on every page — or install via GTM / WooCommerce / Shopify, <b>not both</b>. Installing twice is the #1 cause of duplicates.</p>
+    <label>Pixel ID <input id="pixelIdInput" placeholder="e.g. 123456789012345"></label>
+    <button id="copyCode">Copy base Pixel code</button>
+    <pre id="codeOut"></pre>
+    <div id="platformHint" class="muted"></div>
+  </section>
+  <section id="tab-history" class="tab"><div id="historyList"></div><p class="muted">Local only — last 20 visits per domain, stored in this browser, never sent anywhere. Compare a score before / after a fix.</p></section>
+</main>
+<footer><span id="statusLine" class="muted">Local only · No login · No server · No debugger permission</span><button id="exportJson">JSON</button><button id="exportCsv">CSV</button></footer>
+<div style="text-align:center;color:#6b7280;font-size:12px;padding:8px">Made by - Mobasher, Lab-C, November-2026</div>
+<script src="popup.js"></script>
+</body></html>

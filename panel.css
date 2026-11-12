@@ -1,0 +1,193 @@
+/* PixelScope Pro v1.3 — Meta-like layout, techy emerald theme
+   Light: all white, black text, emerald borders.
+   Dark: all black, white text, emerald borders.
+   Eye care: warm paper, emerald borders. Flat, simple, no gradients. */
+:root{
+  --bg:#ffffff; --surface:#ffffff; --ink:#000000; --mute:#5b6b66; --line:#bfe6d4;
+  --line-strong:#059669; --accent:#059669; --accent-dark:#047857; --accent-bg:#ecfdf5;
+  --ok:#059669; --warn:#b45309; --err:#dc2626; --blue:#2563eb;
+  --ok-bg:#ecfdf5; --warn-bg:#fffbeb; --err-bg:#fef2f2; --info-bg:#ecfdf5;
+  color-scheme:light;
+}
+@media(prefers-color-scheme:dark){
+  /* BUG FIX v1.6 — Meta theme showed dark: this rule had specificity 3
+     (:root + two :not()s) vs 2 for :root[data-theme="meta"], so on a dark
+     system it overrode Meta's colours. Meta must be excluded here. */
+  :root:not([data-theme="light"]):not([data-theme="eyecare"]):not([data-theme="meta"]){
+    --bg:#000000; --surface:#000000; --ink:#ffffff; --mute:#9ca3af; --line:#065f46;
+    --line-strong:#10b981; --accent:#10b981; --accent-dark:#34d399; --accent-bg:#022c22;
+    --ok:#10b981; --warn:#f59e0b; --err:#f87171; --blue:#60a5fa;
+    --ok-bg:#022c22; --warn-bg:#1c1206; --err-bg:#1f0a0a; --info-bg:#022c22;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#000000; --surface:#000000; --ink:#ffffff; --mute:#9ca3af; --line:#065f46;
+  --line-strong:#10b981; --accent:#10b981; --accent-dark:#34d399; --accent-bg:#022c22;
+  --ok:#10b981; --warn:#f59e0b; --err:#f87171; --blue:#60a5fa;
+  --ok-bg:#022c22; --warn-bg:#1c1206; --err-bg:#1f0a0a; --info-bg:#022c22;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#ffffff; --surface:#ffffff; --ink:#000000; --mute:#5b6b66; --line:#bfe6d4;
+  --line-strong:#059669; --accent:#059669; --accent-dark:#047857; --accent-bg:#ecfdf5;
+  --ok:#059669; --warn:#b45309; --err:#dc2626; --blue:#2563eb;
+  --ok-bg:#ecfdf5; --warn-bg:#fffbeb; --err-bg:#fef2f2; --info-bg:#ecfdf5;
+  color-scheme:light;
+}
+:root[data-theme="eyecare"]{
+  --bg:#f6efdd; --surface:#fff8e6; --ink:#3d3325; --mute:#7a6f5a; --line:#d8cba6;
+  --line-strong:#059669; --accent:#047857; --accent-dark:#065f46; --accent-bg:#e6f0d8;
+  --ok:#2e7d32; --warn:#9a6b00; --err:#b3261e; --blue:#1d4ed8;
+  --ok-bg:#e6f0d8; --warn-bg:#f7ead0; --err-bg:#f7ddd6; --info-bg:#f0e8d2;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:13px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+code,td,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+button,select,input{font:inherit;color:inherit}
+button{background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:5px 10px;cursor:pointer;color:var(--ink)}
+button:hover{background:var(--accent-bg)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+a{color:var(--accent-dark)}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px;background:var(--surface);border-bottom:1px solid var(--line-strong);position:sticky;top:0;z-index:3}
+.site{min-width:0}.site strong{display:block;font-size:15px;letter-spacing:.02em}
+.actions{display:flex;gap:6px;flex:none;align-items:center}
+.pills{display:flex;gap:6px;margin-top:3px;flex-wrap:wrap}
+.pill{border:1px solid var(--line-strong);border-radius:20px;padding:1px 8px;font-size:12px;background:var(--accent-bg);color:var(--ink)}
+.pill.error{background:var(--err-bg);color:var(--err);border-color:var(--err)}
+.pill.warn{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.theme-icons{display:flex;gap:4px}
+.theme-icons button{padding:4px 7px;font-size:15px;line-height:1}
+.theme-icons button.active{border-color:var(--accent);background:var(--accent-bg);box-shadow:inset 0 0 0 1px var(--accent)}
+#scoreBar{display:flex;gap:12px;align-items:center;padding:14px 12px;border-bottom:1px solid var(--line);background:var(--surface)}
+#scoreNum{font-size:34px;font-weight:800;width:58px;text-align:center;line-height:1}
+#scoreLabel{font-weight:700;font-size:14px}
+#exportBtn{margin-left:auto;background:var(--ink);color:var(--bg);border-color:var(--ink)}
+/* FIX v1.7: top was hardcoded 57px, but the header is ~46px with no pills and
+   ~69px when the event/error pills wrap — the tabs slid under the header
+   while scrolling. Now panel.js measures the real heights into CSS vars. */
+#tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--line-strong);position:sticky;top:var(--header-h,57px);z-index:3;overflow-x:auto}
+#tabs button{flex:1;white-space:nowrap;border:0;border-bottom:2px solid transparent;border-radius:0;padding:10px 8px;background:none;color:var(--mute)}
+#tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:700}
+#toolbar{display:flex;gap:6px;padding:10px 12px;background:var(--bg);position:sticky;top:calc(var(--header-h,57px) + var(--tabs-h,41px));z-index:2}
+#toolbar[hidden]{display:none}
+#q{flex:1;min-width:0;padding:6px 8px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface)}
+select{border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);padding:4px}
+main{padding:12px 12px 24px}
+.empty{color:var(--mute);padding:28px 8px;text-align:center}.empty b{color:var(--ink);display:block;margin-bottom:4px;font-size:14px}
+.muted{color:var(--mute);font-size:12px}
+.card,.pixel-card{background:var(--surface);border:1px solid var(--line-strong);border-radius:12px;padding:14px;margin:10px 0}
+.pixel-card{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.pixel-card h3{margin:0;font-size:15px}
+.pixel-card .pid{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mute);margin-top:2px}
+.pixel-card .copy-btn{border:0;font-size:18px;padding:4px 8px}
+.section-title{font-size:15px;font-weight:700;margin:18px 0 4px;display:flex;justify-content:space-between;align-items:center}
+.section-title a{font-size:13px;font-weight:600;color:var(--accent-dark);cursor:pointer;text-decoration:none}
+.count-pill{background:var(--ink);color:var(--bg);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700}
+details.ev{background:var(--surface);border:1px solid var(--line-strong);border-radius:12px;margin:10px 0;overflow:hidden}
+details.ev>summary{list-style:none;cursor:pointer;padding:12px 14px;display:block}
+details.ev>summary::-webkit-details-marker{display:none}
+.ev-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.ev-name{font-weight:700;font-size:14px}
+.ev-url{color:var(--mute);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.ev-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mute);margin-top:4px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none}
+.dot.auto{background:var(--blue)}
+.dot.err{background:var(--err)}
+.dot.warn{background:var(--warn)}
+.chev{color:var(--mute);font-size:16px;flex:none}
+.ev-tag{font-size:11px;border:1px solid var(--line-strong);border-radius:4px;padding:0 5px;margin-left:6px;color:var(--mute);font-weight:400}
+.ev-tag.error{color:var(--err);border-color:var(--err)}
+.ev-tag.warn{color:var(--warn);border-color:var(--warn)}
+.body{padding:0 14px 14px;border-top:1px solid var(--line)}
+.body h4{margin:14px 0 4px;font-size:12px;color:var(--mute);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.info-bar{background:var(--accent-bg);margin:0 -14px;padding:10px 14px;font-weight:700;font-size:13px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.info-row{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.info-row:last-child{border-bottom:0}
+.info-ico{font-size:16px;width:22px;flex:none;text-align:center}
+.info-row b{display:block;font-size:13px}
+.info-row span{color:var(--mute);font-size:13px}
+.info-row .show{color:var(--accent-dark);font-weight:600;cursor:pointer;background:none;border:0;padding:0;font-size:13px}
+.info-row pre{background:var(--accent-bg);padding:8px;border-radius:8px;overflow:auto;font-size:11px;white-space:pre-wrap;word-break:break-all;margin:6px 0 0;width:100%}
+.issue{padding:8px;border-radius:8px;margin:6px 0;border:1px solid var(--line-strong)}
+.issue.error{background:var(--err-bg)}.issue.warn{background:var(--warn-bg)}.issue.info{background:var(--info-bg)}
+.issue b{display:block}.issue span{color:var(--mute)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-weight:400;color:var(--mute);width:34%;vertical-align:top;padding:4px 8px 4px 0}
+td{word-break:break-word;padding:4px 0;font-size:12px}
+td code{word-break:break-all}
+tr+tr>*{border-top:1px solid var(--line)}
+.row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.chips span{background:var(--accent-bg);border:1px solid var(--line-strong);border-radius:12px;padding:1px 8px;font-size:12px}
+.check{display:grid;grid-template-columns:20px 1fr;gap:0 8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.check .dot{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:700;margin-top:2px;color:#fff;background:var(--mute)}
+.check .dot.ok{background:var(--ok)}.check .dot.warn{background:var(--warn)}.check .dot.error{background:var(--err)}
+.check p{margin:0;color:var(--mute);grid-column:2}
+.set{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.set small{display:block;color:var(--mute)}
+.funnel-step{display:flex;justify-content:space-between;padding:11px;border:1px solid var(--line-strong);border-radius:10px;margin:8px 0;background:var(--surface)}
+.funnel-step.done{border-color:var(--accent);background:var(--accent-bg)}
+.testrow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:12px}
+input{width:100%;padding:8px;border:1px solid var(--line-strong);border-radius:8px;margin:6px 0;background:var(--surface);color:var(--ink)}
+label{font-weight:600}
+pre#codeOut{background:var(--ink);color:var(--bg);padding:10px;border-radius:8px;overflow:auto;font-size:11px}
+#toast{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:6px 12px;border-radius:8px;opacity:0;pointer-events:none;z-index:9}
+#toast.on{opacity:1}
+#aboutFooter{text-align:center;color:var(--mute);font-size:12px;padding:10px 12px 14px;border-top:1px solid var(--line-strong)}
+.about-card{background:var(--surface);border:1px solid var(--line-strong);border-radius:10px;padding:12px;margin:12px 0}
+.about-card p{margin:4px 0;color:var(--mute)}
+.no-actions{text-align:center;padding:28px 12px;border:1px solid var(--line-strong);border-radius:12px;margin:12px 0}
+.no-actions .big-check{font-size:42px;color:var(--accent);border:2px solid var(--accent);border-radius:50%;width:64px;height:64px;display:grid;place-items:center;margin:0 auto 10px}
+details summary.show{cursor:pointer;color:var(--accent-dark);font-weight:600;list-style:none}
+details summary.show::-webkit-details-marker{display:none}
+
+/* v1.4 — Meta theme: 100% Meta Pixel Helper look.
+   Soft blue-grey background, white cards, grey borders, Meta blue accent.
+   This overrides the emerald techy theme completely when selected. */
+:root[data-theme="meta"]{
+  --bg:#f0f2f5; --surface:#ffffff; --ink:#1c1e21; --mute:#606770; --line:#e4e6eb;
+  --line-strong:#ccd0d5; --accent:#1877f2; --accent-dark:#1877f2; --accent-bg:#e7f3ff;
+  --ok:#31a24c; --warn:#f5c33b; --err:#e41e3f; --blue:#1877f2;
+  --ok-bg:#e6f4ea; --warn-bg:#fff8e1; --err-bg:#fdecea; --info-bg:#e7f3ff;
+  color-scheme:light;
+}
+:root[data-theme="meta"] .card, :root[data-theme="meta"] .pixel-card, :root[data-theme="meta"] details.ev{
+  box-shadow:0 1px 2px rgba(0,0,0,.08); border-color:#ccd0d5;
+}
+:root[data-theme="meta"] #exportBtn{background:#1877f2;border-color:#1877f2}
+:root[data-theme="meta"] .count-pill{background:#1877f2}
+.meta-theme-btn{background:#1877f2!important;color:#fff!important;border-color:#1877f2!important;font-weight:800;border-radius:50%!important;width:28px;height:28px;padding:0!important}
+/* v1.4 — Adblocker notice: yellow, always on top */
+#adblockBanner{background:#fff3cd;color:#664d03;border:1px solid #ffda6a;border-left:4px solid #ffc107;padding:10px 12px;font-size:13px;font-weight:600}
+#adblockBanner[hidden]{display:none}
+/* v1.4 — Copy buttons on every row */
+.copy-mini{border:0;background:none;color:var(--accent-dark);font-size:13px;padding:2px 6px;cursor:pointer;flex:none}
+.copy-mini:hover{background:var(--accent-bg)}
+td .copy-mini{float:right}
+.info-row .copy-mini{margin-left:auto}
+#copyAllBtn{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* v1.6 — Meta mode: hide everything Meta Pixel Helper does NOT show.
+   Kept, exactly as in the Meta screenshots: header (with theme icons — the
+   only way back out), Pixel card, "Events on this page", expandable Event
+   info, "Show all events", "No available actions".
+   Hidden: health score bar, tabs, search/filter/export toolbar, About footer,
+   test-fire, Parameters / Details / Issues tables, Copy buttons, count pills.
+   These come back automatically when you pick any other theme, because the
+   rules below only apply while data-theme="meta". */
+:root[data-theme="meta"] #scoreBar,
+:root[data-theme="meta"] #tabs,
+:root[data-theme="meta"] #toolbar,
+:root[data-theme="meta"] #aboutFooter,
+:root[data-theme="meta"] #summary,
+:root[data-theme="meta"] .testrow,
+:root[data-theme="meta"] .body h4,
+:root[data-theme="meta"] .body table,
+:root[data-theme="meta"] .body .issue,
+:root[data-theme="meta"] .body .row,
+:root[data-theme="meta"] .load-time-card,
+:root[data-theme="meta"] .count-pill,
+:root[data-theme="meta"] .ev-tag{display:none!important}

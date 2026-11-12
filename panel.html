@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>PixelScope Pro</title><link rel="stylesheet" href="panel.css"></head>
+<body>
+<header>
+  <div class="site"><strong id="host">PixelScope Pro</strong><div id="summary" class="pills"></div></div>
+  <div class="actions">
+    <div class="theme-icons" role="group" aria-label="Theme">
+      <button data-theme-btn="light" title="Light mode" aria-label="Light mode">☀️</button>
+      <button data-theme-btn="dark" title="Dark mode" aria-label="Dark mode">🌙</button>
+      <button data-theme-btn="eyecare" title="Eye care mode — warm, low blue light" aria-label="Eye care mode">👁️</button>
+      <button data-theme-btn="meta" title="Meta theme — looks like Meta Pixel Helper" aria-label="Meta theme" class="meta-theme-btn">M</button>
+    </div>
+    <button id="rescan" title="Re-read the page for Pixel code and cookies">Rescan</button><button id="clear" title="Remove captured events for this tab">Clear</button>
+  </div>
+</header>
+<div id="adblockBanner" hidden>⚠️ An extension or adblocker is running, kindly turn off this — it may be blocking the Meta Pixel on this page.</div>
+<div id="scoreBar"><div id="scoreNum">–</div><div><div id="scoreLabel">Checking this page…</div><div id="scoreWhy" class="muted"></div></div><button id="copyAllBtn" title="Copy all data on this page to clipboard">⧉ Copy all</button><button id="exportBtn" title="Download a full audit report">⇩ Report</button></div>
+<nav id="tabs" role="tablist" aria-label="Views">
+  <button role="tab" data-view="events">Events</button>
+  <button role="tab" data-view="pixels">Pixels</button>
+  <button role="tab" data-view="page">Health</button>
+  <button role="tab" data-view="audit">Deep Audit</button>
+  <button role="tab" data-view="funnel">Funnel</button>
+  <button role="tab" data-view="capi">CAPI</button>
+  <button role="tab" data-view="code">Code</button>
+  <button role="tab" data-view="settings">Settings</button>
+</nav>
+<div id="toolbar">
+  <input id="q" type="search" placeholder="Search events, IDs, parameters" aria-label="Search events">
+  <select id="filter" aria-label="Filter events"><option value="all">All events</option><option value="issues">With issues</option><option value="standard">Standard</option><option value="custom">Custom</option><option value="auto">Automatic</option><option value="unsent">Called, never sent</option></select>
+  <button id="exp-json">JSON</button><button id="exp-csv">CSV</button><button id="copyAllBtn2" title="Copy all data on this page">Copy all</button>
+</div>
+<main id="main"></main>
+<footer id="aboutFooter">Made by - Mobasher, Lab-C, November-2026</footer>
+<div id="toast" role="status"></div>
+<script type="module" src="panel.js"></script>
+</body></html>
